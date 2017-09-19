@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hello, WebVR! - A-Frame</title>
+    <meta name="description" content="Hello, WebVR! - A-Frame">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g="
+            crossorigin="anonymous"></script>
+    <script src="https://aframe.io/releases/0.6.0/aframe.min.js"></script>
+    <style>
+        #scenes {
+            position: fixed;
+            bottom: 10px;
+            z-index: 9999999999999999;
+            left: 10px;
+        }
+
+            #scenes ul {
+                list-style: none;
+                padding: 0px;
+                margin: 0px;
+            }
+
+                #scenes ul li {
+                    display: inline;
+                    padding: 10px;
+                    background: rgba(0, 255, 33, 0.6);
+                    border-radius: 4px;
+                }
+
+                    #scenes ul li a {
+                        cursor: pointer;
+                    }
+    </style>
+    <script>
+        // Component to change to random color on click.
+        AFRAME.registerComponent('cursor-listener', {
+            init: function () {
+                var COLORS = ['red', 'green', 'blue', 'yellow', 'black', 'white'];
+                console.log(this);
+                console.log(this.el);
+                this.el.addEventListener('click', function (evt) {
+                    var randomIndex = Math.floor(Math.random() * COLORS.length);
+                    this.setAttribute('material', 'color', COLORS[randomIndex]);
+                    console.log('I was clicked at: ', evt.detail.intersection.point);
+                });
+            }
+        });
+
+        $(document).ready(function () {
+            $('#scenes ul li a').on('click', function () {
+                var src = $(this).attr('data-src');
+                $('#sky').attr('src', src);
+            });
+        });
+    </script>
+</head>
+<body>
+    <div id="scenes">
+        <ul>
+            <li><a data-src="1.jpg">Room 1</a></li>
+            <li><a data-src="2.jpg">Room 2</a></li>
+            <li><a data-src="3.jpg">Room 3</a></li>
+            <li><a data-src="4.jpg">Room 4</a></li>
+            <li><a data-src="5.jpg">Room 5</a></li>
+        </ul>
+    </div>
+    <a-scene>
+        <a-sky id="sky" src="1.jpg" rotation="0 -100 0"></a-sky>
+        <!-- Camera + cursor. -->
+        <a-entity camera look-controls>
+            <a-entity cursor="fuse: true; fuseTimeout: 500"
+                      position="0 0 -1"
+                      geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
+                      material="color: black; shader: flat">
+            </a-entity>
+        </a-entity>
+        <!--<a-entity camera look-controls>
+            <a-cursor id="cursor"
+                      animation__click="property: scale; startEvents: click; from: 0.1 0.1 0.1; to: 1 1 1; dur: 150"
+                      animation__fusing="property: fusing; startEvents: fusing; from: 1 1 1; to: 0.1 0.1 0.1; dur: 1500"
+                      event-set__1="_event: mouseenter; color: springgreen"
+                      event-set__2="_event: mouseleave; color: black"
+                      fuse="true"></a-cursor>
+        </a-entity>-->
+        <!--<a-entity id="box" cursor-listener geometry="primitive: box" material="color: blue"></a-entity>-->
+    </a-scene>
+
+    <!--<script>
+        var scene = document.querySelector('a-scene');
+        var cylinder = document.createElement('a-cylinder');
+        cylinder.setAttribute('color', '#FF9500');
+        cylinder.setAttribute('cursor-listener', '');
+        cylinder.setAttribute('height', '2');
+        cylinder.setAttribute('radius', '0.75');
+        cylinder.setAttribute('position', '3 1 0');
+        scene.appendChild(cylinder);
+    </script>-->
+</body>
+</html>
